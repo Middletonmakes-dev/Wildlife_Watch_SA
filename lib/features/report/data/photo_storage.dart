@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'dart:convert';
 import 'package:cloud_functions/cloud_functions.dart';
 
+import '../../../core/services/firebase_functions.dart';
+
 abstract interface class PhotoStorage {
   Future<void> upload({required String incidentId, required Uint8List bytes});
 }
@@ -29,7 +31,7 @@ class FirebasePhotoStorage implements PhotoStorage {
   Future<void> upload(
       {required String incidentId, required Uint8List bytes}) async {
     try {
-      await FirebaseFunctions.instance
+      await firebaseFunctionsForApp()
           .httpsCallable('uploadIncidentPhoto')
           .call(<String, Object>{
         'incidentId': incidentId,

@@ -1,6 +1,6 @@
 # Agent context
 
-Scarborough Tortoise Watch is a Flutter Web/PWA community wildlife reporting tool focused on tortoises in Scarborough, Cape Town. Its purpose is to turn quick resident observations into defensible evidence about crossings and roadkill while protecting exact wildlife locations.
+Wildlife Watch SA is the umbrella project for a Flutter Web/PWA community wildlife reporting tool. Scarborough Tortoise Watch is its first programme, focused on tortoises in Scarborough, Cape Town. Its initial purpose is to turn quick resident observations into defensible evidence about crossings and roadkill while protecting exact wildlife locations.
 
 ## Current scope
 
@@ -8,7 +8,7 @@ The foundation provides a demo-mode home/report/thank-you flow, GPS or manual ma
 
 ## Architecture rules
 
-- Keep the mobile-first flow fast, readable and usable on inexpensive Android phones.
+- Support Android browsers and iPhone Safari. Keep the mobile-first flow fast, readable and usable on inexpensive phones; the Android performance priority is not an iPhone exclusion.
 - Keep presentation, typed domain models and data access separate. Widgets must not contain Firestore queries.
 - Use Riverpod and go_router. Add abstractions only where they improve testing or protect a trust boundary.
 - Exact `incidents` and private `incidentPhotos` are admin/analysis data. Public `publicIncidents` is an explicit allowlist projection created by trusted Functions.
@@ -19,6 +19,8 @@ The foundation provides a demo-mode home/report/thank-you flow, GPS or manual ma
 - Do not add invasive analytics, advertising, payment processing, complicated offline sync, AI identification or speculative multi-tenant machinery.
 
 Before substantial changes, read `AGENTS.md`, `docs/PROJECT_CONTEXT.md`, `docs/MVP_SCOPE.md` and `docs/DECISIONS.md`. Meaningful architectural or product decisions must be appended to `docs/DECISIONS.md`.
+
+For physical-phone checks, read `docs/PHONE_TESTING.md`. Keep demo UI checks separate from GPS, PWA and Firebase integration evidence. A resized desktop browser or Playwright WebKit run does not establish real iPhone compatibility. Do not mark a physical-device check passed without evidence from that device.
 
 ## Verification
 

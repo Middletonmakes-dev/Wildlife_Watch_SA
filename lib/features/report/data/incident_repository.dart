@@ -1,6 +1,7 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../core/services/firebase_functions.dart';
 import '../domain/incident.dart';
 import '../domain/report_draft.dart';
 
@@ -48,7 +49,7 @@ class FirebaseIncidentRepository implements IncidentRepository {
         await FirebaseAuth.instance.signInAnonymously();
       }
       final callable =
-          FirebaseFunctions.instance.httpsCallable('submitIncident');
+          firebaseFunctionsForApp().httpsCallable('submitIncident');
       final payload = <String, Object?>{
         'requestId': draft.requestId,
         'latitude': draft.location!.latitude,

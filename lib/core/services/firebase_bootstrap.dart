@@ -3,10 +3,10 @@ import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../app/config/app_config.dart';
+import 'firebase_functions.dart';
 
 class FirebaseSetupException implements Exception {
   const FirebaseSetupException(this.message);
@@ -19,6 +19,9 @@ class FirebaseSetupException implements Exception {
 
 class FirebaseBootstrap {
   const FirebaseBootstrap._();
+
+  static ReCaptchaEnterpriseProvider webAppCheckProvider(String siteKey) =>
+      ReCaptchaEnterpriseProvider(siteKey);
 
   static Future<void> initialize(AppConfig config,
       {FirebaseOptions? options}) async {
@@ -42,8 +45,9 @@ class FirebaseBootstrap {
           );
         }
         await FirebaseAppCheck.instance.activate(
-          webProvider: ReCaptchaV3Provider(appCheckKey),
+          webProvider: webAppCheckProvider(appCheckKey),
         );
+        await FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true);
       }
       if (useEmulators) {
         const host = String.fromEnvironment('FIREBASE_EMULATOR_HOST',
@@ -59,10 +63,10 @@ class FirebaseBootstrap {
             host,
             const int.fromEnvironment('AUTH_EMULATOR_PORT',
                 defaultValue: 19099));
-        FirebaseFunctions.instance.useFunctionsEmulator(
+        configureFirebaseFunctionsEmulator(
             host,
             const int.fromEnvironment('FUNCTIONS_EMULATOR_PORT',
-                defaultValue: 15001));
+                defaultValue: firebaseFunctionsEmulatorPort));
         FirebaseStorage.instance.useStorageEmulator(
             host,
             const int.fromEnvironment('STORAGE_EMULATOR_PORT',

@@ -1,8 +1,12 @@
 # Scarborough Tortoise Watch
 
+Part of **Wildlife Watch SA** · [GitHub repository](https://github.com/Middletonmakes-dev/Wildlife_Watch_SA) · [Next device-testing session](docs/NEXT_SESSION.md)
+
 Scarborough Tortoise Watch is a small mobile-first Flutter Web/PWA starter for collecting community tortoise road-sighting evidence in Scarborough, Cape Town. The reporting flow is deliberately quick and does not require visible registration. Exact incident records and photographs are private; the public map uses a separately generated, displaced projection.
 
 The app starts in a labelled demo mode and needs no Firebase credentials. Demo submissions are held in memory and public map markers are synthetic. Firebase is opt-in and fails closed when generated platform options are missing.
+
+The configured [Wildlife Watch SA test deployment](https://wildlife-watch-sa.web.app/) is live, with Scarborough Tortoise Watch as its first programme. It stores actual private reports. See [Firebase setup and deployment evidence](docs/FIREBASE_SETUP.md) and [physical phone testing](docs/PHONE_TESTING.md) for current results and remaining pilot prerequisites.
 
 ## Prerequisites
 
@@ -21,6 +25,8 @@ The app starts in a labelled demo mode and needs no Firebase credentials. Demo s
 
 Demo mode is the default. [Development setup](docs/DEVELOPMENT.md) explains real FlutterFire-generated options, the explicit ignored Firebase entry point, App Check and demo-only emulator connections. `USE_FIREBASE=true` with the default entry point fails closed. No credentials belong in this repository.
 
+The website targets Android browsers and iPhone Safari. Follow the [physical phone testing guide](docs/PHONE_TESTING.md) to try the demo over the same Wi-Fi, then validate GPS and real submissions in a separately configured HTTPS environment.
+
 ## Verify
 
 ```powershell
@@ -33,7 +39,7 @@ npm test --prefix functions
 firebase emulators:exec --only auth,functions,firestore,storage --project demo-scarborough-tortoise-watch 'node functions/test/emulator-all.cjs'
 ```
 
-See [verification results](docs/SETUP_VERIFICATION.md) and [test instructions](docs/TESTING.md). Emulator checks use synthetic local data with a `demo-` project; no cloud project is required. No production deploy is part of this foundation.
+See [verification results](docs/SETUP_VERIFICATION.md) and [test instructions](docs/TESTING.md). Emulator checks use synthetic local data with a `demo-` project; no cloud project is required. These verification commands do not deploy.
 
 ## Structure
 

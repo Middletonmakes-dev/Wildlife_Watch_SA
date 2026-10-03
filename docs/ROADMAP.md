@@ -6,7 +6,7 @@ Exit when the demo starter, typed models, rules, callable boundary, docs and ver
 
 ## Phase 1 — Functional reporting MVP
 
-Exit when a pilot Firebase project supports anonymous reports, optional photos, App Check and safe error recovery on representative Android devices.
+Exit when a pilot Firebase project supports anonymous reports, optional photos, App Check and safe error recovery on representative Android/Chrome and iPhone/Safari devices. Complete the staged checks in `PHONE_TESTING.md`; a desktop mobile viewport is not a physical-device pass.
 
 ## Phase 2 — Public map
 

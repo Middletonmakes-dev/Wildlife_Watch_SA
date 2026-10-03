@@ -4,6 +4,7 @@ const {getFirestore} = require('firebase-admin/firestore');
 const {getAuth} = require('firebase-admin/auth');
 const {getStorage} = require('firebase-admin/storage');
 const sharp = require('sharp');
+const {FUNCTIONS_REGION} = require('../lib/config');
 const projectId = 'demo-scarborough-tortoise-watch';
 // Hard fail before touching any SDK unless the local suite supplied all emulators.
 for (const name of ['FIRESTORE_EMULATOR_HOST', 'FIREBASE_AUTH_EMULATOR_HOST', 'FIREBASE_STORAGE_EMULATOR_HOST']) {
@@ -23,7 +24,7 @@ async function authToken(adminRole = false) {
   return (await response.json()).idToken;
 }
 async function call(name, data, token) {
-  const response = await fetch(`http://127.0.0.1:15001/${projectId}/us-central1/${name}`, {method: 'POST', headers: {'content-type': 'application/json', ...(token ? {authorization: `Bearer ${token}`} : {})}, body: JSON.stringify({data})});
+  const response = await fetch(`http://127.0.0.1:15001/${projectId}/${FUNCTIONS_REGION}/${name}`, {method: 'POST', headers: {'content-type': 'application/json', ...(token ? {authorization: `Bearer ${token}`} : {})}, body: JSON.stringify({data})});
   return response.json();
 }
 async function main() {

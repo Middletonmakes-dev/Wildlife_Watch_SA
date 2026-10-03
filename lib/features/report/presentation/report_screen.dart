@@ -171,7 +171,7 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
             OutlinedButton.icon(
               onPressed: state.status == ReportStatus.submitting
                   ? null
-                  : () => _pickPhoto(config),
+                  : () => _choosePhotoSource(config),
               icon: const Icon(Icons.photo_camera_outlined),
               label: Text(state.draft.photoBytes == null
                   ? 'Add an optional photo'
@@ -216,9 +216,34 @@ class _ReportScreenState extends ConsumerState<ReportScreen> {
     );
   }
 
-  Future<void> _pickPhoto(AppConfig config) async {
+  Future<void> _choosePhotoSource(AppConfig config) async {
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTile(
+              leading: const Icon(Icons.camera_alt_outlined),
+              title: const Text('Take photo'),
+              onTap: () => Navigator.of(context).pop(ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library_outlined),
+              title: const Text('Choose existing photo'),
+              onTap: () => Navigator.of(context).pop(ImageSource.gallery),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (!mounted || source == null) return;
+    await _pickPhoto(config, source);
+  }
+
+  Future<void> _pickPhoto(AppConfig config, ImageSource source) async {
     final picked = await ImagePicker().pickImage(
-      source: ImageSource.camera,
+      source: source,
     );
     if (picked == null) return;
     final bytes = await picked.readAsBytes();

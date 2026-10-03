@@ -10,6 +10,12 @@ Scarborough Tortoise watch/
 |       `-- synthetic_incidents.json
 |-- docs/
 |   |-- screenshots/
+|   |   |-- android-firebase-empty-map.png
+|   |   |-- android-firebase-photo-choice.png
+|   |   |-- android-firebase-photo-thanks.png
+|   |   |-- android-firebase-thanks.png
+|   |   |-- android-map-filter.png
+|   |   |-- android-report-thanks.png
 |   |   |-- demo-home.jpg
 |   |   `-- demo-thanks.jpg
 |   |-- superpowers/
@@ -25,9 +31,12 @@ Scarborough Tortoise watch/
 |   |-- DEVELOPMENT.md
 |   |-- DIRECTORY_TREE.txt
 |   |-- DONATIONS.md
+|   |-- FIREBASE_SETUP.md
 |   |-- INITIAL_REQUEST.md
 |   |-- MVP_SCOPE.md
+|   |-- NEXT_SESSION.md
 |   |-- OPERATIONS.md
+|   |-- PHONE_TESTING.md
 |   |-- PRIVACY.md
 |   |-- PRODUCT_REQUIREMENTS.md
 |   |-- PROJECT_CONTEXT.md
@@ -37,6 +46,7 @@ Scarborough Tortoise watch/
 |   `-- TESTING.md
 |-- functions/
 |   |-- src/
+|   |   |-- config.ts
 |   |   |-- index.ts
 |   |   |-- photo.ts
 |   |   |-- projection.ts
@@ -46,6 +56,7 @@ Scarborough Tortoise watch/
 |   |   |-- emulator-callable.cjs
 |   |   |-- emulator-rules.cjs
 |   |   |-- projection.test.js
+|   |   |-- region.test.js
 |   |   |-- security_rules.test.js
 |   |   `-- validation.test.js
 |   |-- package-lock.json
@@ -66,7 +77,8 @@ Scarborough Tortoise watch/
 |   |   |-- privacy/
 |   |   |   `-- public_coordinate_sanitizer.dart
 |   |   `-- services/
-|   |       `-- firebase_bootstrap.dart
+|   |       |-- firebase_bootstrap.dart
+|   |       `-- firebase_functions.dart
 |   |-- features/
 |   |   |-- admin/
 |   |   |   |-- data/
@@ -118,6 +130,7 @@ Scarborough Tortoise watch/
 |   |-- report/
 |   |   `-- report_controller_test.dart
 |   `-- widget/
+|       |-- photo_choice_test.dart
 |       `-- report_flow_test.dart
 |-- web/
 |   |-- icons/

@@ -2,7 +2,7 @@
 
 ## In scope
 
-- Mobile-first Flutter Web/PWA starter
+- Mobile-first Flutter Web/PWA starter targeting Android browsers and iPhone Safari
 - Anonymous reporter experience with Firebase-backed callable submission when configured
 - GPS and manual tap/drag map pin, incident classification, optional photo/note/direction
 - Confirmation and centrally maintained guidance

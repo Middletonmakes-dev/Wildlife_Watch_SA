@@ -8,6 +8,7 @@ import {HttpsError, onCall} from 'firebase-functions/v2/https';
 import {createPublicProjection, projectionForModeration} from './projection';
 import {validateSubmission} from './validation';
 import {photoInput, processPrivateJpeg} from './photo';
+import {FUNCTIONS_REGION} from './config';
 
 initializeApp();
 const db = getFirestore();
@@ -17,7 +18,7 @@ const submissionCooldownMs = 5000;
 
 // Only the Functions emulator may bypass App Check; production always enforces it.
 const enforceAppCheck = process.env.FUNCTIONS_EMULATOR !== 'true';
-export const submitIncident = onCall({enforceAppCheck}, async (request) => {
+export const submitIncident = onCall({region: FUNCTIONS_REGION, enforceAppCheck}, async (request) => {
   const uid = request.auth?.uid;
   if (!uid) throw new HttpsError('unauthenticated', 'Sign-in is required to submit a report.');
   const data = request.data as Record<string, unknown> | null | undefined;
@@ -69,7 +70,7 @@ export const submitIncident = onCall({enforceAppCheck}, async (request) => {
   return {incidentId, alreadyExists};
 });
 
-export const uploadIncidentPhoto = onCall({enforceAppCheck, memory: '256MiB', concurrency: 4}, async (request) => {
+export const uploadIncidentPhoto = onCall({region: FUNCTIONS_REGION, enforceAppCheck, memory: '256MiB', concurrency: 4}, async (request) => {
   const uid = request.auth?.uid;
   if (!uid) throw new HttpsError('unauthenticated', 'Sign-in is required.');
   const {incidentId, bytes} = photoInput(request.data);
@@ -106,7 +107,7 @@ export const uploadIncidentPhoto = onCall({enforceAppCheck, memory: '256MiB', co
   return {photoStored: true};
 });
 
-export const setIncidentModeration = onCall({enforceAppCheck}, async (request) => {
+export const setIncidentModeration = onCall({region: FUNCTIONS_REGION, enforceAppCheck}, async (request) => {
   requireAdmin(request.auth);
   const data = request.data as Record<string, unknown> | null | undefined;
   if (!data || typeof data !== 'object' || Array.isArray(data)) {

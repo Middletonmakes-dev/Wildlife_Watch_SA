@@ -4,6 +4,8 @@
 
 From the repository root, run `flutter pub get`, then `flutter run -d chrome`. Demo is the default; no Firebase project, options file or cloud data is required. Reports remain in memory and all public fixtures are visibly synthetic. The map uses external starter tiles; configure a reviewed provider before public launch.
 
+For a physical Android or iPhone on the same Wi-Fi, use the staged [phone testing guide](PHONE_TESTING.md). Serve only `build/web`, bound to the selected private LAN address. The existing `127.0.0.1` preview is reachable only on the PC. A phone's own `localhost` is the phone, not this PC, unless an explicit USB reverse mapping has been set up as described in that guide. The current Android test uses that USB mapping.
+
 Verified tools: Flutter 3.41.1/Dart 3.11.0, Node 22, Java 21 and Firebase CLI 15.7.0. On this Windows workspace Flutter is at `C:\Users\admin\Documents\Flutter\flutter\bin\flutter.bat`; add its `bin` directory to your terminal PATH or use that absolute path. Standard commands below work on other systems with those tools on PATH.
 
 ## Generated Firebase integration (manual, after separate project setup)
@@ -13,10 +15,9 @@ Do not fabricate credentials. Select a properly owned Firebase project, install/
 ```powershell
 flutterfire configure --project YOUR_PROJECT_ID --platforms web --out lib/firebase_options.dart
 Copy-Item lib/main_firebase.dart.example lib/main_firebase.dart
-flutter run -d chrome -t lib/main_firebase.dart --dart-define=USE_FIREBASE=true --dart-define=APP_CHECK_WEB_KEY=YOUR_RECAPTCHA_V3_SITE_KEY
 ```
 
-Both generated options and the configured entry point are ignored. The default `main.dart` deliberately cannot initialize production Firebase and displays a setup error if `USE_FIREBASE=true` is supplied without explicit options. The Firebase entry point consumes `DefaultFirebaseOptions.currentPlatform`; generating the file alone is insufficient. Enable anonymous Auth, configure App Check, review rule access and link trusted Functions separately. No production setup or deployment was performed here.
+Both generated options and the configured entry point are ignored. The default `main.dart` deliberately cannot initialize production Firebase and displays a setup error if `USE_FIREBASE=true` is supplied without explicit options. The Firebase entry point consumes `DefaultFirebaseOptions.currentPlatform`; generating the file alone is insufficient. The cloud bootstrap requires `APP_CHECK_WEB_KEY` for a score-based reCAPTCHA Enterprise provider and enables token auto-refresh. Use the local emulator command below for localhost; the production key permits only the Hosting domains. See `FIREBASE_SETUP.md` for the authorized first deployment and live evidence, and `DEPLOYMENT.md` for the separate release build. Ordinary local verification remains emulator-only.
 
 ## Isolated emulators
 
@@ -46,7 +47,7 @@ firebase emulators:start --only auth,functions,firestore,storage --project demo-
 flutter run -d chrome -t lib/main_firebase.dart --dart-define=USE_FIREBASE=true --dart-define=USE_FIREBASE_EMULATORS=true
 ```
 
-App Check is bypassed only in the Functions emulator and the explicit Flutter emulator branch. Production always requires it. Use `FIREBASE_EMULATOR_HOST` for a device-accessible local hostname if testing on a phone; all services must remain local. No production Functions may be invoked by tests.
+App Check is bypassed only in the Functions emulator and the explicit Flutter emulator branch. Production always requires it. Flutter Functions clients, all three callable exports and emulator test URLs use `africa-south1`. Use `FIREBASE_EMULATOR_HOST` for a device-accessible local hostname if testing on a phone; all services must remain local. No production Functions may be invoked by tests.
 
 ## Configuration and branding
 

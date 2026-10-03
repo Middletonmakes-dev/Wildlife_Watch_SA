@@ -11,16 +11,51 @@
   },
   "hosting": {
     "public": "build/web",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [{"source": "**", "destination": "/index.html"}]
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   },
   "emulators": {
-    "auth": {"port": 19099},
-    "functions": {"port": 15001},
-    "firestore": {"port": 18080},
-    "storage": {"port": 19199},
-    "hub": {"port": 14400},
-    "logging": {"port": 14500},
-    "ui": {"enabled": false}
+    "auth": {
+      "port": 19099
+    },
+    "functions": {
+      "port": 15001
+    },
+    "firestore": {
+      "port": 18080
+    },
+    "storage": {
+      "port": 19199
+    },
+    "hub": {
+      "port": 14400
+    },
+    "logging": {
+      "port": 14500
+    },
+    "ui": {
+      "enabled": false
+    }
+  },
+  "flutter": {
+    "platforms": {
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "wildlife-watch-sa",
+          "configurations": {
+            "web": "1:976831816568:web:87442a5de321fb4229de8d"
+          }
+        }
+      }
+    }
   }
 }

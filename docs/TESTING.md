@@ -1,5 +1,7 @@
 # Testing
 
+Physical Android/Chrome and iPhone/Safari checks are tracked separately in [PHONE_TESTING.md](PHONE_TESTING.md). Start with the local demo and then test the configured app over HTTPS. Neither the desktop mobile viewport already checked nor optional Playwright WebKit emulation counts as proof of physical iPhone compatibility.
+
 Flutter checks:
 
 ```powershell
