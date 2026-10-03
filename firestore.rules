@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return signedIn() && (
+        request.auth.token.get('admin', false) == true ||
+        request.auth.token.get('role', '') == 'admin' ||
+        request.auth.token.get('role', '') == 'analyst'
+      );
+    }
+
+    // Private exact records are written only by the submitIncident callable.
+    match /incidents/{incidentId} {
+      allow read: if isAdmin();
+      allow create, update, delete: if false;
+    }
+
+    // Public projections contain an explicit allowlist and no exact coordinates.
+    match /publicIncidents/{incidentId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /_submissionThrottle/{uid} {
+      allow read, write: if false;
+    }
+  }
+}

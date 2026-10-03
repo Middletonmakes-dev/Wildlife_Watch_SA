@@ -1,0 +1,13 @@
+// Copy to main_firebase.dart AFTER flutterfire configure generates firebase_options.dart.
+// This entry point is ignored by Git; the default main.dart remains credential-free.
+import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'main.dart' as app;
+
+Future<void> main() {
+  final generated = DefaultFirebaseOptions.currentPlatform;
+  const local = bool.fromEnvironment('USE_FIREBASE_EMULATORS');
+  // Reuse tooling-generated platform identifiers; a demo project ID forces local-only data.
+  final options = local ? FirebaseOptions(apiKey: generated.apiKey, appId: generated.appId, messagingSenderId: generated.messagingSenderId, projectId: 'demo-scarborough-tortoise-watch', storageBucket: 'demo-scarborough-tortoise-watch.appspot.com') : generated;
+  return app.launchApp(firebaseOptions: options);
+}

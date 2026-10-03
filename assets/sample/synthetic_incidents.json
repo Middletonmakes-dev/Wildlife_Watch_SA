@@ -1,0 +1,9 @@
+[
+  {
+    "id": "synthetic-incident-1",
+    "note": "Synthetic development fixture; not a real sighting.",
+    "incidentType": "alive_crossing_road",
+    "latitude": -34.197,
+    "longitude": 18.375
+  }
+]

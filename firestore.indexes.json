@@ -1,0 +1,21 @@
+{
+  "indexes": [
+    {
+      "collectionGroup": "incidents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "moderationStatus", "order": "ASCENDING"},
+        {"fieldPath": "createdAt", "order": "DESCENDING"}
+      ]
+    },
+    {
+      "collectionGroup": "publicIncidents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "incidentType", "order": "ASCENDING"},
+        {"fieldPath": "date", "order": "DESCENDING"}
+      ]
+    }
+  ],
+  "fieldOverrides": []
+}

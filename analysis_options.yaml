@@ -1,0 +1,14 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    avoid_print: true
+    directives_ordering: false
+    prefer_final_locals: true
+    require_trailing_commas: false
+    curly_braces_in_flow_control_structures: false
+
+analyzer:
+  exclude:
+    - build/**
+    - .dart_tool/**

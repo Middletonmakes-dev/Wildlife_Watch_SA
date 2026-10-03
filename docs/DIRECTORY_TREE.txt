@@ -1,0 +1,140 @@
+Scarborough Tortoise watch/
+|-- .github/
+|   `-- workflows/
+|       `-- verify.yml
+|-- assets/
+|   |-- config/
+|   |   |-- branding.json
+|   |   `-- placeholder.txt
+|   `-- sample/
+|       `-- synthetic_incidents.json
+|-- docs/
+|   |-- screenshots/
+|   |   |-- demo-home.jpg
+|   |   `-- demo-thanks.jpg
+|   |-- superpowers/
+|   |   |-- plans/
+|   |   |   `-- 2026-10-03-foundation.md
+|   |   `-- specs/
+|   |       `-- 2026-10-03-foundation-design.md
+|   |-- ARCHITECTURE.md
+|   |-- CONSERVATION_GUIDANCE.md
+|   |-- DATA_MODEL.md
+|   |-- DECISIONS.md
+|   |-- DEPLOYMENT.md
+|   |-- DEVELOPMENT.md
+|   |-- DIRECTORY_TREE.txt
+|   |-- DONATIONS.md
+|   |-- INITIAL_REQUEST.md
+|   |-- MVP_SCOPE.md
+|   |-- OPERATIONS.md
+|   |-- PRIVACY.md
+|   |-- PRODUCT_REQUIREMENTS.md
+|   |-- PROJECT_CONTEXT.md
+|   |-- ROADMAP.md
+|   |-- SECURITY.md
+|   |-- SETUP_VERIFICATION.md
+|   `-- TESTING.md
+|-- functions/
+|   |-- src/
+|   |   |-- index.ts
+|   |   |-- photo.ts
+|   |   |-- projection.ts
+|   |   `-- validation.ts
+|   |-- test/
+|   |   |-- emulator-all.cjs
+|   |   |-- emulator-callable.cjs
+|   |   |-- emulator-rules.cjs
+|   |   |-- projection.test.js
+|   |   |-- security_rules.test.js
+|   |   `-- validation.test.js
+|   |-- package-lock.json
+|   |-- package.json
+|   `-- tsconfig.json
+|-- lib/
+|   |-- app/
+|   |   |-- config/
+|   |   |   |-- app_config.dart
+|   |   |   |-- branding.dart
+|   |   |   `-- guidance.dart
+|   |   |-- theme/
+|   |   |   `-- app_theme.dart
+|   |   |-- app.dart
+|   |   |-- providers.dart
+|   |   `-- router.dart
+|   |-- core/
+|   |   |-- privacy/
+|   |   |   `-- public_coordinate_sanitizer.dart
+|   |   `-- services/
+|   |       `-- firebase_bootstrap.dart
+|   |-- features/
+|   |   |-- admin/
+|   |   |   |-- data/
+|   |   |   |   |-- admin_repository.dart
+|   |   |   |   `-- csv_exporter.dart
+|   |   |   `-- presentation/
+|   |   |       `-- admin_screen.dart
+|   |   |-- home/
+|   |   |   `-- presentation/
+|   |   |       `-- home_screen.dart
+|   |   |-- map/
+|   |   |   |-- data/
+|   |   |   |   `-- public_incident_repository.dart
+|   |   |   |-- domain/
+|   |   |   |   |-- map_provider.dart
+|   |   |   |   `-- public_incident.dart
+|   |   |   `-- presentation/
+|   |   |       `-- public_map_screen.dart
+|   |   |-- report/
+|   |   |   |-- data/
+|   |   |   |   |-- incident_repository.dart
+|   |   |   |   |-- photo_processor.dart
+|   |   |   |   `-- photo_storage.dart
+|   |   |   |-- domain/
+|   |   |   |   |-- incident.dart
+|   |   |   |   |-- location_service.dart
+|   |   |   |   |-- report_controller.dart
+|   |   |   |   `-- report_draft.dart
+|   |   |   `-- presentation/
+|   |   |       |-- report_screen.dart
+|   |   |       `-- thank_you_screen.dart
+|   |   `-- support/
+|   |       `-- presentation/
+|   |           `-- support_card.dart
+|   |-- firebase_options.dart.example
+|   |-- main.dart
+|   `-- main_firebase.dart.example
+|-- scripts/
+|   `-- sync_branding.py
+|-- test/
+|   |-- admin/
+|   |   `-- csv_exporter_test.dart
+|   |-- domain/
+|   |   |-- firebase_bootstrap_test.dart
+|   |   |-- incident_test.dart
+|   |   |-- photo_processor_test.dart
+|   |   |-- public_projection_test.dart
+|   |   `-- validation_test.dart
+|   |-- report/
+|   |   `-- report_controller_test.dart
+|   `-- widget/
+|       `-- report_flow_test.dart
+|-- web/
+|   |-- icons/
+|   |   |-- icon-192.png
+|   |   |-- icon-512.png
+|   |   `-- icon.svg
+|   |-- index.html
+|   |-- manifest.json
+|   `-- service-worker.js
+|-- .env.example
+|-- .gitignore
+|-- AGENTS.md
+|-- analysis_options.yaml
+|-- firebase.json
+|-- firestore.indexes.json
+|-- firestore.rules
+|-- pubspec.lock
+|-- pubspec.yaml
+|-- README.md
+`-- storage.rules
