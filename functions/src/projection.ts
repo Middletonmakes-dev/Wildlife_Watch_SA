@@ -1,3 +1,15 @@
+import {PUBLICATION_DELAY_MS} from './config';
+
+export function publicationEligibility(createdAt: Date, now: Date): {eligible: boolean; eligibleAt: Date} {
+  if (!(createdAt instanceof Date) || !(now instanceof Date) ||
+      !Number.isFinite(createdAt.getTime()) || !Number.isFinite(now.getTime())) {
+    throw new Error('Valid server creation and current dates are required.');
+  }
+  const eligibleAt = new Date(createdAt.getTime() + PUBLICATION_DELAY_MS);
+  if (!Number.isFinite(eligibleAt.getTime())) throw new Error('Invalid publication eligibility date.');
+  return {eligible: now.getTime() >= eligibleAt.getTime(), eligibleAt};
+}
+
 export interface PublicProjectionInput {
   id: string;
   incidentType: string;

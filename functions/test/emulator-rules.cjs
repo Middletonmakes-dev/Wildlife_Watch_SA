@@ -2,7 +2,7 @@
 const {readFileSync} = require('node:fs');
 const {resolve} = require('node:path');
 const {initializeTestEnvironment, assertFails, assertSucceeds} = require('@firebase/rules-unit-testing');
-const {doc, setDoc, getDoc, getDocs, collection} = require('firebase/firestore');
+const {doc, setDoc, getDoc, getDocs, collection, query, limit, orderBy} = require('firebase/firestore');
 const {ref, uploadBytes, getBytes, listAll, deleteObject} = require('firebase/storage');
 
 async function main() {
@@ -22,6 +22,7 @@ async function main() {
       await setDoc(doc(ctx.firestore(), 'incidents', 'foreign'), {reporterUid: 'other', photoReferences: ['incidentPhotos/foreign/photo.jpg']});
       await setDoc(doc(ctx.firestore(), 'incidents', 'unreserved'), {reporterUid: 'owner', photoReferences: []});
       await setDoc(doc(ctx.firestore(), 'publicIncidents', 'public'), {id: 'public', date: '2026-10-03', displayLatitude: -34.1973, displayLongitude: 18.375, incidentType: 'injured'});
+      await setDoc(doc(ctx.firestore(), '_abuseCounters', 'fixture'), {count: 1});
     });
     const anonymous = env.unauthenticatedContext();
     const owner = env.authenticatedContext('owner');
@@ -34,10 +35,19 @@ async function main() {
       await deny(setDoc(doc(ctx.firestore(), 'publicIncidents', 'forged'), {latitude: 0}));
       await deny(getDoc(doc(ctx.firestore(), '_submissionThrottle', 'owner')));
       await pass(getDoc(doc(ctx.firestore(), 'publicIncidents', 'public')));
+      const publicCollection = collection(ctx.firestore(), 'publicIncidents');
+      await deny(getDocs(publicCollection));
+      await deny(getDocs(query(publicCollection, limit(501))));
+      await pass(getDocs(query(publicCollection, orderBy('date', 'desc'), limit(500))));
     }
     for (const ctx of [admin, analyst]) {
       await pass(getDoc(doc(ctx.firestore(), 'incidents', 'owned')));
       await deny(setDoc(doc(ctx.firestore(), 'incidents', 'owned'), {latitude: 0}));
+    }
+    for (const ctx of [anonymous, owner, admin, analyst]) {
+      await deny(getDoc(doc(ctx.firestore(), '_abuseCounters', 'fixture')));
+      await deny(getDocs(collection(ctx.firestore(), '_abuseCounters')));
+      await deny(setDoc(doc(ctx.firestore(), '_abuseCounters', 'fixture'), {count: 0}));
     }
     const jpeg = new Uint8Array([0xff, 0xd8, 0xff, 0xd9]);
     await deny(uploadBytes(ref(anonymous.storage(), path), jpeg, {contentType: 'image/jpeg'}));

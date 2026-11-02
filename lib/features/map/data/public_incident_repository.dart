@@ -7,6 +7,7 @@ abstract interface class PublicIncidentRepository {
     String? typeFilter,
     DateTime? from,
     DateTime? to,
+    bool forceRefresh = false,
   });
 }
 
@@ -35,28 +36,83 @@ class DemoPublicIncidentRepository implements PublicIncidentRepository {
     String? typeFilter,
     DateTime? from,
     DateTime? to,
+    bool forceRefresh = false,
   }) async {
     return _filter(incidents, typeFilter: typeFilter, from: from, to: to);
   }
 }
 
 class FirebasePublicIncidentRepository implements PublicIncidentRepository {
-  const FirebasePublicIncidentRepository();
+  FirebasePublicIncidentRepository({
+    Future<List<PublicIncident>> Function()? loadPage,
+    DateTime Function()? now,
+  })  : _loadPage = loadPage ?? _fetchServerPage,
+        _now = now ?? DateTime.now;
+
+  final Future<List<PublicIncident>> Function() _loadPage;
+  final DateTime Function() _now;
+  List<PublicIncident>? _cached;
+  DateTime? _loadedAt;
+  Future<List<PublicIncident>>? _inFlight;
+  Future<List<PublicIncident>>? _latestLoad;
+  int _generation = 0;
+
+  static Future<List<PublicIncident>> _fetchServerPage() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection('publicIncidents')
+        .orderBy('date', descending: true)
+        .limit(500)
+        .get(const GetOptions(source: Source.server));
+    return snapshot.docs
+        .map((doc) => PublicIncident.fromJson(doc.data()))
+        .toList(growable: false);
+  }
+
+  Future<List<PublicIncident>> _page(bool forceRefresh) {
+    if (forceRefresh) {
+      _generation++;
+      _cached = null;
+      _loadedAt = null;
+      _inFlight = null;
+    }
+    final loadedAt = _loadedAt;
+    if (_cached != null &&
+        loadedAt != null &&
+        _now().difference(loadedAt) < const Duration(seconds: 60)) {
+      return Future.value(_cached);
+    }
+    if (_inFlight != null) return _inFlight!;
+    final load = _fetch(_generation);
+    _latestLoad = load;
+    _inFlight = load;
+    return load;
+  }
+
+  Future<List<PublicIncident>> _fetch(int generation) async {
+    try {
+      final page = List<PublicIncident>.unmodifiable(await _loadPage());
+      // An older request must follow the newest result, including its failure.
+      // Retaining that future avoids silently starting a third read on failure.
+      if (generation != _generation) return await _latestLoad!;
+      _cached = page;
+      _loadedAt = _now();
+      return page;
+    } catch (_) {
+      if (generation != _generation) return await _latestLoad!;
+      rethrow;
+    } finally {
+      if (generation == _generation) _inFlight = null;
+    }
+  }
 
   @override
   Future<List<PublicIncident>> list({
     String? typeFilter,
     DateTime? from,
     DateTime? to,
+    bool forceRefresh = false,
   }) async {
-    final snapshot = await FirebaseFirestore.instance
-        .collection('publicIncidents')
-        .orderBy('date', descending: true)
-        .limit(500)
-        .get();
-    final incidents = snapshot.docs
-        .map((doc) => PublicIncident.fromJson(doc.data()))
-        .toList(growable: false);
+    final incidents = await _page(forceRefresh);
     return _filter(incidents, typeFilter: typeFilter, from: from, to: to);
   }
 }

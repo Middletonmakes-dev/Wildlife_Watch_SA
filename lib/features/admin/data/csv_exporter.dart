@@ -28,8 +28,12 @@ class CsvExporter {
   static String export(
     List<AdminIncidentRecord> records, {
     required bool authorised,
+    bool includeWithdrawn = false,
   }) {
     if (!authorised) throw const AdminAuthorisationException();
+    final exportRecords = includeWithdrawn
+        ? records
+        : records.where((record) => record.status != 'withdrawn').toList();
     final rows = <List<Object>>[
       <Object>[
         'id',
@@ -40,7 +44,7 @@ class CsvExporter {
         'status',
         'note',
       ],
-      ...records.map(
+      ...exportRecords.map(
         (record) => <Object>[
           record.id,
           record.createdAt,

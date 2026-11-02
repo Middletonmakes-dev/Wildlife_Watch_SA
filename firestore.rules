@@ -21,11 +21,17 @@ service cloud.firestore {
 
     // Public projections contain an explicit allowlist and no exact coordinates.
     match /publicIncidents/{incidentId} {
-      allow read: if true;
+      allow get: if true;
+      allow list: if request.query.limit != null && request.query.limit <= 500;
       allow write: if false;
     }
 
     match /_submissionThrottle/{uid} {
+      allow read, write: if false;
+    }
+
+    // Admission state is server-only, including for admin/analysis clients.
+    match /_abuseCounters/{counterId} {
       allow read, write: if false;
     }
   }

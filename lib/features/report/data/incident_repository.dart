@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../core/services/firebase_functions.dart';
 import '../domain/incident.dart';
+import '../domain/owner_incident.dart';
 import '../domain/report_draft.dart';
 
 abstract interface class IncidentRepository {
@@ -25,17 +26,50 @@ class ReportRepositoryException implements Exception {
 }
 
 class DemoIncidentRepository implements IncidentRepository {
-  final Map<String, SubmissionResult> _submissions =
+  static final Map<String, SubmissionResult> _submissions =
       <String, SubmissionResult>{};
+  static final Map<String, OwnerIncidentReceipt> _receipts =
+      <String, OwnerIncidentReceipt>{};
+
+  static List<OwnerIncidentReceipt> get receipts =>
+      _receipts.values.toList(growable: false);
+
+  static bool withdrawReceipt(String id) {
+    final receipt = _receipts[id];
+    if (receipt == null) return false;
+    if (receipt.status == OwnerIncidentStatus.withdrawn) return true;
+    _receipts[id] = OwnerIncidentReceipt(
+      id: receipt.id,
+      incidentType: receipt.incidentType,
+      status: OwnerIncidentStatus.withdrawn,
+      createdAt: receipt.createdAt,
+    );
+    return true;
+  }
+
+  static void clearForTest() {
+    _submissions.clear();
+    _receipts.clear();
+  }
 
   @override
   Future<SubmissionResult> submit(ReportDraft draft) async {
     final errors = draft.validate();
     if (errors.isNotEmpty) throw ReportRepositoryException(errors.first);
-    return _submissions.putIfAbsent(
+    final result = _submissions.putIfAbsent(
       draft.requestId,
       () => SubmissionResult(incidentId: 'demo-${_submissions.length + 1}'),
     );
+    _receipts.putIfAbsent(
+      result.incidentId,
+      () => OwnerIncidentReceipt(
+        id: result.incidentId,
+        incidentType: draft.incidentType!,
+        status: OwnerIncidentStatus.pending,
+        createdAt: draft.occurredAt ?? DateTime.now(),
+      ),
+    );
+    return result;
   }
 }
 

@@ -9,6 +9,15 @@
       ]
     },
     {
+      "collectionGroup": "incidents",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {"fieldPath": "reporterUid", "order": "ASCENDING"},
+        {"fieldPath": "createdAt", "order": "DESCENDING"},
+        {"fieldPath": "__name__", "order": "DESCENDING"}
+      ]
+    },
+    {
       "collectionGroup": "publicIncidents",
       "queryScope": "COLLECTION",
       "fields": [

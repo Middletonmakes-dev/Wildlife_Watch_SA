@@ -23,8 +23,11 @@ class FirebaseBootstrap {
   static ReCaptchaEnterpriseProvider webAppCheckProvider(String siteKey) =>
       ReCaptchaEnterpriseProvider(siteKey);
 
-  static Future<void> initialize(AppConfig config,
-      {FirebaseOptions? options}) async {
+  static Future<void> initialize(
+    AppConfig config, {
+    FirebaseOptions? options,
+    Future<void> Function()? onFirebaseReady,
+  }) async {
     if (!config.useFirebase) return;
     if (options == null) {
       throw const FirebaseSetupException(
@@ -32,9 +35,9 @@ class FirebaseBootstrap {
     }
     const useEmulators = bool.fromEnvironment('USE_FIREBASE_EMULATORS');
     try {
-      if (Firebase.apps.isEmpty) {
-        await Firebase.initializeApp(options: options);
-      }
+      // FlutterFire loads its web SDK before checking/reusing the default app.
+      // Reading Firebase.apps first depends on browser-specific JS error text.
+      await Firebase.initializeApp(options: options);
       FirebaseFirestore.instance.settings =
           const Settings(persistenceEnabled: false);
       if (kIsWeb && !useEmulators) {
@@ -72,6 +75,7 @@ class FirebaseBootstrap {
             const int.fromEnvironment('STORAGE_EMULATOR_PORT',
                 defaultValue: 19199));
       }
+      await onFirebaseReady?.call();
     } on Object catch (_) {
       throw const FirebaseSetupException(
         'Firebase setup is incomplete. Run flutterfire configure and provide App Check configuration, then retry.',

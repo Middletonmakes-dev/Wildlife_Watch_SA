@@ -66,34 +66,35 @@ class ReportController {
 
   ReportState get state => _state;
 
-  Future<void> startLocation() async {
-    if (_inFlight || _state.incidentId != null) return;
+  Future<bool> startLocation() async {
+    if (_inFlight || _state.incidentId != null) return false;
     final generation = ++_locationGeneration;
     _manualLocationSelected = false;
     _state = _state.copyWith(status: ReportStatus.locating, clearMessage: true);
     try {
       final result = await _locationService.currentLocation();
-      if (generation != _locationGeneration || _inFlight) return;
-      await applyLocationResult(result);
+      if (generation != _locationGeneration || _inFlight) return false;
+      return await applyLocationResult(result);
     } on LocationException catch (error) {
-      if (generation != _locationGeneration || _inFlight) return;
+      if (generation != _locationGeneration || _inFlight) return false;
       _state = _state.copyWith(
         status: ReportStatus.ready,
         locationMessage: error.message,
       );
     } catch (_) {
-      if (generation != _locationGeneration || _inFlight) return;
+      if (generation != _locationGeneration || _inFlight) return false;
       _state = _state.copyWith(
         status: ReportStatus.ready,
         locationMessage:
             'Location is unavailable. Tap the map to choose it manually.',
       );
     }
+    return false;
   }
 
-  Future<void> applyLocationResult(LocationResult result) async {
+  Future<bool> applyLocationResult(LocationResult result) async {
     if (_manualLocationSelected || _inFlight || _state.incidentId != null)
-      return;
+      return false;
     _state = _state.copyWith(
       draft: _state.draft.copyWith(location: result.coordinate),
       status: ReportStatus.ready,
@@ -101,6 +102,7 @@ class ReportController {
           ? 'GPS accuracy is low. Tap the map to adjust the pin.'
           : 'Location ready. You can move the pin if needed.',
     );
+    return true;
   }
 
   void setManualLocation(GeoCoordinate coordinate) {
@@ -111,12 +113,24 @@ class ReportController {
       draft: _state.draft.copyWith(location: coordinate),
       status: ReportStatus.ready,
       locationMessage: 'Manual location selected.',
+      clearMessage: true,
     );
+  }
+
+  /// Selecting manual editing cancels acceptance of any pending GPS result,
+  /// without silently confirming the map centre as a report location.
+  void cancelLocationRequest() {
+    if (_inFlight || _state.incidentId != null) return;
+    _locationGeneration++;
+    _manualLocationSelected = true;
+    if (_state.status == ReportStatus.locating) {
+      _state = _state.copyWith(status: ReportStatus.ready);
+    }
   }
 
   void updateDraft(ReportDraft draft) {
     if (_inFlight || _state.incidentId != null) return;
-    _state = _state.copyWith(draft: draft);
+    _state = _state.copyWith(draft: draft, clearMessage: true);
   }
 
   Future<void> submit() async {

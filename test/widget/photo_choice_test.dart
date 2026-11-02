@@ -94,6 +94,8 @@ Future<void> _openReport(WidgetTester tester) async {
   );
   await tester.tap(find.text('Report a tortoise'));
   await tester.pumpAndSettle();
+  await tester.tap(find.text('Crossing road'));
+  await tester.pumpAndSettle();
 }
 
 class _FakeImagePickerPlatform extends ImagePickerPlatform

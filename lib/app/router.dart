@@ -5,6 +5,7 @@ import '../features/home/presentation/home_screen.dart';
 import '../features/map/presentation/public_map_screen.dart';
 import '../features/report/presentation/report_screen.dart';
 import '../features/report/presentation/thank_you_screen.dart';
+import '../features/report/presentation/your_reports_screen.dart';
 import '../features/support/presentation/support_card.dart';
 
 GoRouter buildRouter() => GoRouter(
@@ -16,6 +17,9 @@ GoRouter buildRouter() => GoRouter(
         GoRoute(
             path: '/thanks',
             builder: (context, state) => const ThankYouScreen()),
+        GoRoute(
+            path: '/your-reports',
+            builder: (context, state) => const YourReportsScreen()),
         GoRoute(
             path: '/map', builder: (context, state) => const PublicMapScreen()),
         GoRoute(

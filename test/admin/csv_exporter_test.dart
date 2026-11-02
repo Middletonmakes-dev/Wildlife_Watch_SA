@@ -46,4 +46,36 @@ void main() {
       throwsA(isA<AdminAuthorisationException>()),
     );
   });
+
+  test(
+      'normal CSV excludes withdrawn audit records unless explicitly requested',
+      () {
+    const records = <AdminIncidentRecord>[
+      AdminIncidentRecord(
+        id: 'active',
+        createdAt: '2026',
+        latitude: -34.1,
+        longitude: 18.3,
+        incidentType: 'injured',
+        status: 'pending',
+      ),
+      AdminIncidentRecord(
+        id: 'withdrawn',
+        createdAt: '2026',
+        latitude: -34.2,
+        longitude: 18.4,
+        incidentType: 'injured',
+        status: 'withdrawn',
+      ),
+    ];
+    final activeCsv = CsvExporter.export(records, authorised: true);
+    expect(activeCsv, contains('"active"'));
+    expect(activeCsv, isNot(contains('"withdrawn"')));
+    final auditCsv = CsvExporter.export(
+      records,
+      authorised: true,
+      includeWithdrawn: true,
+    );
+    expect(auditCsv, contains('"withdrawn"'));
+  });
 }

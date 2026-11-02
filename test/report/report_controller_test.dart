@@ -33,11 +33,15 @@ class FakePhotoStorage implements PhotoStorage {
 
   bool fail;
   int calls = 0;
+  final attemptedIds = <String>[];
+  final attemptedBytes = <Uint8List>[];
 
   @override
   Future<void> upload(
       {required String incidentId, required Uint8List bytes}) async {
     calls++;
+    attemptedIds.add(incidentId);
+    attemptedBytes.add(Uint8List.fromList(bytes));
     if (fail) throw const PhotoStorageException('photo unavailable');
   }
 }
@@ -52,6 +56,74 @@ class FakeLocationService implements LocationService {
 }
 
 void main() {
+  test('GPS request reports acceptance and rejects late manual replacement',
+      () async {
+    final gps = DelayedLocationService();
+    final controller = ReportController(
+        repository: FakeRepository(),
+        photoStorage: FakePhotoStorage(),
+        locationService: gps,
+        initialDraft: const ReportDraft(requestId: 'fix-result'));
+    final pending = controller.startLocation();
+    controller.setManualLocation(const GeoCoordinate(
+        latitude: 1, longitude: 1, source: LocationSource.manualPin));
+    gps.completer.complete(const LocationResult(GeoCoordinate(
+        latitude: 0, longitude: 0, source: LocationSource.deviceGps)));
+    expect(await pending, false);
+    expect(controller.state.draft.location!.source, LocationSource.manualPin);
+  });
+  test('GPS request returns true only for an applied fix', () async {
+    final controller = ReportController(
+        repository: FakeRepository(),
+        photoStorage: FakePhotoStorage(),
+        locationService: FakeLocationService(const LocationResult(GeoCoordinate(
+            latitude: 0, longitude: 0, source: LocationSource.deviceGps))),
+        initialDraft: const ReportDraft(requestId: 'accepted-fix'));
+    expect(await controller.startLocation(), true);
+  });
+  test('denied GPS request returns false', () async {
+    final controller = ReportController(
+        repository: FakeRepository(),
+        photoStorage: FakePhotoStorage(),
+        locationService: const DemoLocationService(),
+        initialDraft: const ReportDraft(requestId: 'denied-fix'));
+    expect(await controller.startLocation(), false);
+    expect(controller.state.draft.location, isNull);
+  });
+  test('correcting a draft clears obsolete validation feedback', () async {
+    final controller = ReportController(
+        repository: FakeRepository(),
+        photoStorage: FakePhotoStorage(),
+        locationService: const DemoLocationService(),
+        initialDraft: const ReportDraft(requestId: 'validation'));
+    await controller.submit();
+    expect(controller.state.message, isNotNull);
+    controller.updateDraft(
+        controller.state.draft.copyWith(incidentType: IncidentType.injured));
+    expect(controller.state.message, isNull);
+    await controller.submit();
+    expect(controller.state.message, 'Confirm the location');
+    controller.setManualLocation(const GeoCoordinate(
+        latitude: -34.197,
+        longitude: 18.375,
+        source: LocationSource.manualPin));
+    expect(controller.state.message, isNull);
+  });
+  test('successful GPS clears a previous missing-location error', () async {
+    final controller = ReportController(
+        repository: FakeRepository(),
+        photoStorage: FakePhotoStorage(),
+        locationService: FakeLocationService(const LocationResult(GeoCoordinate(
+            latitude: -34.197,
+            longitude: 18.375,
+            source: LocationSource.deviceGps))),
+        initialDraft: const ReportDraft(
+            requestId: 'gps-validation', incidentType: IncidentType.injured));
+    await controller.submit();
+    expect(controller.state.message, 'Confirm the location');
+    await controller.startLocation();
+    expect(controller.state.message, isNull);
+  });
   test('a delayed GPS failure cannot reopen an in-flight submission', () async {
     final location = DelayedLocationService();
     final repository = DelayedRepository();
@@ -176,6 +248,9 @@ void main() {
     expect(controller.state.incidentId, savedId);
     expect(photoStorage.calls, 2);
     expect(repository.calls, 1);
+    expect(photoStorage.attemptedIds, <String>[savedId!, savedId]);
+    expect(photoStorage.attemptedBytes[0], <int>[1, 2, 3]);
+    expect(photoStorage.attemptedBytes[1], photoStorage.attemptedBytes[0]);
   });
 
   test(

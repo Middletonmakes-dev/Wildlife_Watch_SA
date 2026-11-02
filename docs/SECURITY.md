@@ -1,5 +1,13 @@
 # Security
 
+## Current security context — reconciled 2026-11-02
+
+The October 13 eleven-task chain added transactional admission, bounded photo processing with safe retries/race checks, explicit callable capacity, bounded public queries and cache invalidation, and seven-day/100–250 m policy for new projections with legacy stability. Independent review reported no implementation findings; a separately authorized release and exact readbacks followed. See [current handoff](NEXT_SESSION.md), [operations](SECURITY_OPERATIONS.md) and [Hosting security](HOSTING_SECURITY.md). Baseline browser headers are enforced; strict resource CSP remains pending. The October 14 Android smoke is limited and does not establish full release acceptance.
+
+The historical summary below predates those additions. The two moderate dependency entries it records were cleared by the compatible Task 9 update, with zero production audit findings on October 13. No current dependency scan, cloud readback or security test was performed by this November context refresh. MFA/recovery, billing readiness, runtime Editor least privilege and remaining device/auth/CSP gates stay open. Shared privacy policy remains explicitly deferred.
+
+## Foundation security boundaries and historical audit
+
 Firestore denies client writes to private and public collections. Exact reads require custom claims `admin`, role `admin`, or role `analyst`; public reads are limited to the projection collection. Storage object reads require the same trusted role; listings and direct client creates/updates are denied. Exact/admin data never enters the service-worker cache or persistent Firestore cache.
 
 `uploadIncidentPhoto` requires Auth and production App Check, checks incident ownership and the reserved path, bounds Base64 input before decoding, limits decoded input to 2 MiB and JPEG pixel count to 8 megapixels, and uses Sharp to decode/re-encode with metadata removed. A Firestore transaction permanently reserves the processed-image hash before writing. It saves via Admin GCS with generation-zero precondition and no Firebase download-token metadata. This boundary is necessary because Firebase client `putData` can create bearer download tokens that bypass rules. Identical processed-image retries are accepted; different images cannot replace the reserved slot, including after interrupted uploads. The callable returns only success, never a download/signed URL.

@@ -1,4 +1,20 @@
-# Setup verification — 2026-10-03
+# Setup verification
+
+## Git publication verification — 2026-11-02
+
+The owner authorized review, commit and GitHub publication of the accumulated app/security changes. Fresh local checks passed: Flutter analysis (no issues), 92 Flutter tests, formatting (63 files, zero changes), demo release build in ignored `build/git-review-20261102`, 44 Functions tests, and 53 rules plus 115 callable emulator assertions against `demo-scarborough-tortoise-watch`. The first sandboxed Flutter launcher produced no output and was cancelled; the SDK-cache-enabled run completed successfully. No deployment or production write was performed.
+
+Publication excludes `.local/`, `work/`, `outputs/`, the three October Android evidence screenshots and the unused illustrative image. The historical private account address and internal chat identifiers were removed from publishable handoff text. Public Hosting configurations and the owner-supplied shipped assets remain included. Local verification logs are retained under ignored `.local/git-housekeeping-20261102/`. This checkpoint does not clear the remaining physical-device, authentication, operational or community-launch gates.
+
+## Latest evidence summary — reconciled 2026-11-02
+
+This is a documentation reconciliation, not a fresh test run. October 13 security-chain evidence records 44 Node tests, 168 emulator assertions (53 rules + 115 callable), 92 Flutter tests, clean analysis and isolated builds. The cumulative independent review found no Critical/Important/Minor implementation findings. The production dependency audit returned zero advisories at that checkpoint; do not treat it as a current November audit. See `.local/security-chain-20261013/progress.md`, task handoffs and `cumulative-review.md`.
+
+The subsequently authorized October 13 release has exact five-Function source/options, rules, ten frontend asset and nineteen-path-per-alias header readbacks under `.local/security-release-20261013/`. All five Functions were ACTIVE, App Check enforced and indexes READY. Storage did not need redeployment. The Functions CLI's cleanup-policy exit did not undo the successful release; it was reconciled by readback, not a repeated deploy. See [release handoff](NEXT_SESSION.md).
+
+October 14 physical Android smoke passed home/report navigation, map loading/filtering and warm reload only. No phone-side artifact hash match, production submission or complete auth/PWA/iPhone proof was obtained. See [phone testing](PHONE_TESTING.md) for PASS/PENDING and the blocked validation action. Strict resource-CSP enforcement and operational launch gates remain pending. All older sections below are dated baseline evidence, including their then-current dependency and setup limitations.
+
+## Foundation verification — 2026-10-03
 
 The foundation section records local verification by the implementation agent on 2026-10-03. Those checks used no cloud project/account creation, production data, deployment or external Git mutation. Later sections distinguish phone evidence and subsequent user-authorized Firebase setup. Emulator-only authentication users and synthetic local documents were disposable. Root owns the separate final browser/review/Git evidence.
 
@@ -91,3 +107,15 @@ An exact downloaded-artifact match confirmed the new bundle, while its original 
 After the user replied `approved photo test`, root accepted Chrome photos/media permission, selected only the synthetic JPEG from Downloads and submitted the second labelled manual report once. The physical phone reached [thank-you](screenshots/android-firebase-photo-thanks.png), and its [public map remained empty](screenshots/android-firebase-empty-map.png). Final readback confirms exactly two private pending manual-pin reports, one JPEG of 17,423 bytes attached to the second report, `photoStored: true`, no download tokens and no public bucket IAM member. The anonymous media request returned 401. All three real callable requests (two submissions and one upload) logged valid App Check and Auth. Evidence: `.local/firebase-phone-summary.json`, `.local/firebase-phone-photo-privacy.json`, `.local/firebase-callable-verification-logs.json` and `.local/firebase-phone-final-check.json`.
 
 The approved two-report/one-photo Android smoke passed. This continuation changed documentation and local evidence helpers only; the previously reviewed 24-test application build stayed deployed. No extra reports, moderation, public projection or deletion occurred. Actual GPS, camera capture, installed PWA/update behavior and iPhone remain untested. Future pilot preparation still includes trusted admin access, conservation/tile-provider decisions, retention and cost controls.
+
+## Subsequent Android GPS, camera and PWA checks — 2026-10-03
+
+After the reviewed project was published at `3d6a36c`, a new session verified the same physical Samsung/Chrome against `https://wildlife-watch-sa.firebaseapp.com/`. No application source or deployed artifact changed. Device actions used ADB; Node's built-in WebSocket connected through a temporary, scoped ADB DevTools forward for readbacks. The forward was removed afterward.
+
+- GPS permission was temporarily allowed after explicit user confirmation of the map-provider data flow. The real application geolocation call succeeded, reporting approximately 18 m accuracy; the rendered form showed Location ready. A subsequent map tap showed Manual location selected. Screenshots were limited to status/form content below the actual-location map; precise coordinates were never logged.
+- After the owner confirmed a harmless target, native camera capture returned a processed Photo selected state. A second camera launch followed by cancellation preserved the selected photo. Initial silent cancellation was traced to Chrome's denied camera permission; an Only this time permission allowed capture. No photo/report was submitted.
+- Chrome installed the app with a verified matching origin. Standalone home, report and empty public-map navigation passed, and the installed launcher activity relaunched to home. Runtime secure context and standalone display mode were true.
+- Worker registration was activated with no waiting/installing worker. An explicit update check against the unchanged release completed. A device fetch of `service-worker.js` returned 200 with `Cache-Control: no-cache`; SHA-256 `691349c4e7f1fd25770ee7ec0933d6ef9e16e93c97afbb8299dd1ff5e8d412ef` matched the local release. The device cache contained only `/`, `/index.html`, `/manifest.json` and the two app icons. A changed-version update was not tested.
+- Scoped runtime inspections returned no relevant warnings/errors or exceptions. Their limited observation window does not establish the absence of every earlier console/network issue.
+
+Evidence and limitations are in `PHONE_TESTING.md`, with three app-only screenshots. Ignored JSON readbacks are under `.local/phone-tests/next-*.json`. The final origin location permission and Chrome camera permission were denied again; the PWA remained installed at home. No cloud report/photo call, moderation, deletion, deployment or Git publication occurred in this session. iPhone, GPS timeout/low-accuracy, weak-network and cross-version update checks remain outstanding. Verification for this documentation-only continuation is the device evidence, source/evidence review and Git whitespace/link checks; prior app build/test counts are historical and were not rerun.

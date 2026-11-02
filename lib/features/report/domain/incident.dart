@@ -46,7 +46,7 @@ extension LocationSourceX on LocationSource {
       };
 }
 
-enum ModerationStatus { pending, accepted, rejected, duplicate }
+enum ModerationStatus { pending, accepted, rejected, duplicate, withdrawn }
 
 extension ModerationStatusX on ModerationStatus {
   String get code => name;

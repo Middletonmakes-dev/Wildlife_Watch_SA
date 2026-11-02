@@ -6,6 +6,8 @@ import '../features/report/data/photo_storage.dart';
 import '../features/report/domain/location_service.dart';
 import '../features/map/data/public_incident_repository.dart';
 import '../features/admin/data/admin_repository.dart';
+import '../features/admin/data/auth_repository.dart';
+import '../features/report/data/owner_incident_repository.dart';
 import 'config/app_config.dart';
 
 final appConfigProvider =
@@ -29,7 +31,7 @@ final photoStorageProvider = Provider<PhotoStorage>((ref) {
 
 final locationServiceProvider = Provider<LocationService>((ref) {
   final config = ref.watch(appConfigProvider);
-  return config.useFirebase
+  return config.useFirebase || config.demoDeviceGps
       ? const DeviceLocationService()
       : const DemoLocationService();
 });
@@ -38,7 +40,7 @@ final publicIncidentRepositoryProvider =
     Provider<PublicIncidentRepository>((ref) {
   final config = ref.watch(appConfigProvider);
   return config.useFirebase
-      ? const FirebasePublicIncidentRepository()
+      ? FirebasePublicIncidentRepository()
       : const DemoPublicIncidentRepository();
 });
 
@@ -47,4 +49,19 @@ final adminRepositoryProvider = Provider<AdminRepository>((ref) {
   return config.useFirebase
       ? const FirebaseAdminRepository()
       : const DemoAdminRepository();
+});
+
+final ownerIncidentRepositoryProvider =
+    Provider<OwnerIncidentRepository>((ref) {
+  final config = ref.watch(appConfigProvider);
+  return config.useFirebase
+      ? const FirebaseOwnerIncidentRepository()
+      : const DemoOwnerIncidentRepository();
+});
+
+final authRepositoryProvider = Provider<AuthRepository>((ref) {
+  final config = ref.watch(appConfigProvider);
+  return config.useFirebase
+      ? FirebaseAuthRepository()
+      : const DemoAuthRepository();
 });

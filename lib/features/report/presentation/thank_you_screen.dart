@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/config/guidance.dart';
+import '../../../app/theme/app_theme.dart';
 import '../domain/incident.dart';
 
 class ThankYouData {
@@ -46,11 +47,16 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
             child: Column(
               children: <Widget>[
                 const Icon(Icons.check_circle_outline,
-                    size: 72, color: Colors.green),
+                    size: 64, color: AppTheme.rust),
                 const SizedBox(height: 16),
                 Text(
                     data?.message ?? 'No report was submitted in this session.',
                     style: Theme.of(context).textTheme.headlineMedium),
+                if (data?.message != null && data?.demo == false) ...<Widget>[
+                  const SizedBox(height: 12),
+                  const Text(
+                      'Your report is saved and waiting for review. Approved reports appear on the public map with their locations obscured.'),
+                ],
                 if (data?.hasPhoto == true &&
                     data?.photoUploaded == false &&
                     !_photoRecovered) ...<Widget>[
@@ -79,12 +85,6 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
                 if (data?.incidentType == IncidentType.aliveCrossingRoad ||
                     data?.incidentType == IncidentType.aliveNearRoad)
                   const Text(ConservationGuidance.roadSafety),
-                const SizedBox(height: 8),
-                Text(
-                  ConservationGuidance.draftNotice,
-                  style: Theme.of(context).textTheme.bodySmall,
-                  textAlign: TextAlign.center,
-                ),
                 if (data?.demo == true) ...<Widget>[
                   const SizedBox(height: 8),
                   const Text(
@@ -94,6 +94,10 @@ class _ThankYouScreenState extends State<ThankYouScreen> {
                 OutlinedButton(
                     onPressed: () => context.go('/map'),
                     child: const Text('View sightings map')),
+                const SizedBox(height: 8),
+                OutlinedButton(
+                    onPressed: () => context.go('/your-reports'),
+                    child: const Text('View your reports')),
                 const SizedBox(height: 8),
                 TextButton(
                     onPressed: () => context.go('/'),

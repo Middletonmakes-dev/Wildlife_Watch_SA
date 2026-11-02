@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../app/config/external_links.dart';
+import '../../../app/theme/external_link_button.dart';
 
 class SupportCardPage extends StatelessWidget {
   const SupportCardPage({super.key});
@@ -11,7 +13,8 @@ class SupportCardPage extends StatelessWidget {
         title: const Text('Support the project'),
         leading: BackButton(onPressed: () => context.go('/')),
       ),
-      body: Center(
+      body: SingleChildScrollView(
+          child: Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Card(
@@ -26,19 +29,21 @@ class SupportCardPage extends StatelessWidget {
                       style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(height: 8),
                   const Text(
-                    'A future support option may help with hosting, mapping, storage and conservation work. Payment processing is intentionally not enabled yet.',
+                    'If you would like to support Good Spotting, you can make an optional contribution via SnapScan. Reporting sightings is free.',
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 16),
-                  OutlinedButton(
-                      onPressed: null,
-                      child: const Text('Support option coming later')),
+                  ExternalLinkButton(
+                      label: 'Support via SnapScan',
+                      url: ExternalLinks.support),
+                  const Text('Opens SnapScan in a new tab',
+                      textAlign: TextAlign.center),
                 ],
               ),
             ),
           ),
         ),
-      ),
+      )),
     );
   }
 }

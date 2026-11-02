@@ -9,6 +9,16 @@ functions/.firebase/
 build/
 coverage/
 .local/
+# Local verification evidence, generated previews, and reference copies.
+# Preserve on disk; promote reviewed evidence to docs/ explicitly.
+/work/
+/outputs/
+# Physical-device evidence remains local, even when documentation refers to it.
+/docs/screenshots/android-camera-selected.png
+/docs/screenshots/android-gps-ready.png
+/docs/screenshots/android-pwa-home.png
+# Unused local design reference; the app uses tortoise-real.jpeg.
+/assets/images/tortoise-illustration.jpg
 .idea/
 *.iml
 .DS_Store
